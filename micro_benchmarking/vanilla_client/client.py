@@ -24,7 +24,7 @@ if __name__ == '__main__':
     os.makedirs("results", exist_ok=True)
 
     # CSV file setup
-    csv_filename = "results/image_classification_times.csv"
+    csv_filename = "results/resnet.csv"
     file_exists = os.path.isfile(csv_filename)
 
     fieldnames = ["client_send_at", "server_receive_at",
