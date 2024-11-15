@@ -39,7 +39,7 @@ def test_ckn_broker_connection(bootstrap_servers, timeout=10, num_tries=5):
     """
     Checks if the CKN broker is up and running.
     :param bootstrap_servers: CKN broker hosts
-    :param timeout: seconds to wait for the admin client to connect
+    :param timeout: seconds to wait for the admin ckn_client to connect
     :return: True if connection is successful, otherwise False
     """
     config = {'bootstrap.servers': bootstrap_servers}

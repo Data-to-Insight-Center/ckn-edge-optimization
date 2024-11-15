@@ -20,9 +20,9 @@ if __name__ == '__main__':
         "ground_truth": "abacus"
     }
 
-    csv_filename = "mobilenet_ckn.csv"
+    csv_filename = "results_ckn.csv"
 
-    fieldnames = ["client_send_at", "server_receive_at",
+    fieldnames = ["model", "client_send_at", "server_receive_at",
                   "image_preprocessed_at", "image_predicted_at",
                   "image_save_at", "qoe_computed_at", "broker_produced_at", "client_receive_at"]
 
@@ -48,6 +48,7 @@ if __name__ == '__main__':
                 response = response.json()
                 # Prepare data for CSV row
                 data = {
+                    "model": response["model"],
                     "client_send_at": client_send_at,
                     "server_receive_at": float(response["server_receive_at"]),
                     "image_save_at": float(response["image_save_at"]),

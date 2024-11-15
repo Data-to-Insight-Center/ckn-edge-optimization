@@ -2,13 +2,10 @@ import os
 import time
 
 from confluent_kafka import Producer
-from dotenv import load_dotenv
 from flask import Flask, flash, request, redirect, jsonify
 
 from model import predict, pre_process, model_store
 from server_utils import save_file, process_qoe, check_file_extension
-
-load_dotenv(".env")
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './uploads'
@@ -83,6 +80,7 @@ def process_w_qoe(file, data):
     broker_produced_at = time.time()
 
     return jsonify({
+        "model": "mobilenet_v3_small",
         "server_receive_at": server_receive_at,
         "image_save_at": image_save_at,
         "image_preprocessed_at": image_preprocessed_at,

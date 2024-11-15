@@ -1,6 +1,5 @@
 import os
 import time
-from model import predict, pre_process, model_store
 from werkzeug.utils import secure_filename
 
 def delivery_report(err, msg):
