@@ -9,7 +9,7 @@ from queue import Queue
 from confluent_kafka import Producer
 from dotenv import load_dotenv
 from flask import Flask, flash, request, redirect, jsonify
-# from jtop import jtop
+from jtop import jtop
 
 from model import predict, pre_process, model_store
 from server_utils import save_file, process_qoe, check_file_extension
@@ -30,6 +30,7 @@ producer = Producer({'bootstrap.servers': KAFKA_BROKER})
 previous_deployment_id = None
 last_model_id = None
 deployment_id = None
+device_id = None
 
 def delivery_report(err, msg):
     """
@@ -161,25 +162,25 @@ def process_w_qoe(file, data):
     total_start_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
     filename = save_file(file)
 
-    # with jtop() as jetson:
-    #     if jetson.ok():
-    #         stop_event = threading.Event()
-    cpu_power_queue = Queue()
-    gpu_power_queue = Queue()
-    tot_power_queue = Queue()
-    #
-    #         power_thread = threading.Thread(target=measure_average_power, args=(jetson, stop_event, cpu_power_queue, gpu_power_queue, tot_power_queue))
-    #         power_thread.start()
-    #
-    #         try:
-    preprocessed_input = pre_process(filename)
-    compute_start_time = time.time()
-    prediction, probability = predict(preprocessed_input)
-    compute_end_time = time.time()
-    #         finally:
-    #             stop_event.set()
-    #             power_thread.join()
-    #
+    with jtop() as jetson:
+        if jetson.ok():
+            stop_event = threading.Event()
+            cpu_power_queue = Queue()
+            gpu_power_queue = Queue()
+            tot_power_queue = Queue()
+
+            power_thread = threading.Thread(target=measure_average_power, args=(jetson, stop_event, cpu_power_queue, gpu_power_queue, tot_power_queue))
+            power_thread.start()
+
+            try:
+                preprocessed_input = pre_process(filename)
+                compute_start_time = time.time()
+                prediction, probability = predict(preprocessed_input)
+                compute_end_time = time.time()
+            finally:
+                stop_event.set()
+                power_thread.join()
+
     cpu_power = cpu_power_queue.get() if not cpu_power_queue.empty() else 0
     gpu_power = gpu_power_queue.get() if not gpu_power_queue.empty() else 0
     total_power = tot_power_queue.get() if not tot_power_queue.empty() else 0
