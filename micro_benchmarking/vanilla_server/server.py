@@ -26,6 +26,7 @@ def qoe_predict():
     image_predicted_at = time.time()
 
     return jsonify({
+        "model": "vanilla_mobilenet_v3_small",
         "server_receive_at": server_receive_at,
         "image_save_at": image_save_at,
         "image_preprocessed_at": image_preprocessed_at,

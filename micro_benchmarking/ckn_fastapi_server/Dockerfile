@@ -1,4 +1,3 @@
-# Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
 # Set the working directory in the container
@@ -13,8 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Conditionally create the uploads directory
 RUN mkdir -p /app/uploads
 
-# Expose port 8000 to allow external access
-EXPOSE 8000
+# Expose the port the app will run on (8080 for FastAPI)
+EXPOSE 8080
 
-# Command to run the FastAPI app using Uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Use Uvicorn as the default ENTRYPOINT
+ENTRYPOINT ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8080"]

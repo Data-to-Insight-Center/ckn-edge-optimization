@@ -1,3 +1,4 @@
+import json
 import os
 import time
 
@@ -75,7 +76,8 @@ def process_w_qoe(file, data):
     current_model_id = model_store.get_current_model_id()
     qoe_computed_at = time.time()
 
-    producer.produce(RAW_EVENT_TOPIC)
+    kafka_payload = json.dumps({'server_id': SERVER_ID, 'model_id': current_model_id, 'qoe': qoe, 'accuracy_qoe': acc_qoe, 'delay_qoe': delay_qoe})
+    producer.produce(RAW_EVENT_TOPIC, kafka_payload, callback=delivery_report)
     producer.flush(timeout=1)
     broker_produced_at = time.time()
 

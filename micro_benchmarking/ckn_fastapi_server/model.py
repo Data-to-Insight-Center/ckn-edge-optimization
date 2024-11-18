@@ -4,18 +4,18 @@ from torchvision import transforms
 from torchvision import models
 
 model_mapping = {
-    "d16e72acdf64baf2f9b8e2276c927535e9278d5cd3202d2eef943c1d0a60d84d-model": "googlenet",
-    "e0e46c4c246a0a9d88c9cbbbb9a4390600abe071c4d532a4b28e7cb8e20b08d6-model": "resnet152",
-    "665fdecddef3647b5882051d4b852b6ec075d4530d548a954dbb6d5e69286c5d-model": "shufflenet_v2_x0_5",
+    "0d0172ce3cc25da4697f133e19887296883e696d2604850080e7eaf9c1188ae3-model": "googlenet",
+    "975bf34ecdbd98c731b126bd8ce520879910892d2f9464bcfb4558dcf335fe5f-model": "resnet152",
+    "f6734196b613320a5823d6f326107d05a4154778fdf0d5c85c7145760bf87f2a-model": "shufflenet_v2_x0_5",
     "86c48c6b1eca331e9c745e5d036480f4706a83b7c08ecc5cbf44a4fa12d19237-model": "densenet201",
-    "922a64a4094a6dc421bdb875d3bd533a56352f1cdb2a3f9600534213fabc5b2f-model": "mobilenet_v3_small",
+    "3e5344c2e2bc4e3db7ac97810c0390700a8c7d71c62d7808995d28e75be393e2-model": "mobilenet_v3_small",
     "38db957b18993eba7120b2e55f02dde7c4cb39a5bc6bd056bfe0628a29129e11-model": "resnext50_32x4d"
 }
 
 class ModelStore:
     def __init__(self):
         self.model_index = 0
-        self.current_model_id = "e0e46c4c246a0a9d88c9cbbbb9a4390600abe071c4d532a4b28e7cb8e20b08d6-model"
+        self.current_model_id = "3e5344c2e2bc4e3db7ac97810c0390700a8c7d71c62d7808995d28e75be393e2-model"
 
     def get_current_model_id(self):
         return self.current_model_id
@@ -31,10 +31,10 @@ class ModelStore:
     # model = torch.hub.load('pytorch/vision:v0.10.0', 'convnext', pretrained=True)
 
     # model = torch.hub.load('pytorch/vision:v0.10.0', 'squeezenet1_1', pretrained=True)
-    model = torch.hub.load('pytorch/vision:v0.10.0', 'resnet152', pretrained=True)
+    # model = torch.hub.load('pytorch/vision:v0.10.0', 'resnet152', pretrained=True)
     # model = torch.hub.load('pytorch/vision:v0.10.0', 'shufflenet_v2_x0_5', pretrained=True)
     # model = torch.hub.load('pytorch/vision:v0.10.0', 'densenet201', pretrained=True)
-    # model = torch.hub.load('pytorch/vision:v0.10.0', 'mobilenet_v3_small', pretrained=True)
+    model = torch.hub.load('pytorch/vision:v0.10.0', 'mobilenet_v3_small', pretrained=True)
     # model = torch.hub.load('pytorch/vision:v0.10.0', 'resnext50_32x4d', pretrained=True)
 
     # model = torch.hub.load('pytorch/vision:v0.10.0', 'googlenet', pretrained=True)

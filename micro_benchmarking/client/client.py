@@ -20,7 +20,7 @@ if __name__ == '__main__':
         "ground_truth": "abacus"
     }
 
-    csv_filename = "results_ckn.csv"
+    csv_filename = "results_flask.csv"
 
     fieldnames = ["model", "client_send_at", "server_receive_at",
                   "image_preprocessed_at", "image_predicted_at",
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         writer.writeheader()
 
         # Loop through 100 requests
-        for i in range(100):
+        for i in range(1000):
             # Open the image file in binary mode
             with open(file_location, 'rb') as file:
                 files = {
@@ -51,11 +51,11 @@ if __name__ == '__main__':
                     "model": response["model"],
                     "client_send_at": client_send_at,
                     "server_receive_at": float(response["server_receive_at"]),
-                    "image_save_at": float(response["image_save_at"]),
+                    "image_save_at": float(response.get("image_save_at", float(response["server_receive_at"]))),
                     "image_preprocessed_at": float(response["image_preprocessed_at"]),
                     "image_predicted_at": float(response["image_predicted_at"]),
-                    "qoe_computed_at": float(response["qoe_computed_at"]),
-                    "broker_produced_at": float(response["broker_produced_at"]),
+                    "qoe_computed_at": float(response.get("qoe_computed_at", float(response["image_predicted_at"]))),
+                    "broker_produced_at": float(response.get("broker_produced_at", float(response["image_predicted_at"]))),
                     "client_receive_at": client_receive_at
                 }
 

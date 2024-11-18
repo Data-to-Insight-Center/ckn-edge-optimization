@@ -1,0 +1,10 @@
+version: "3.8"  # Specify the Docker Compose file version
+
+services:
+  ckn-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ckn-fastapi-daemon
+    ports:
+      - "8080:8080"  # Map FastAPI's default port 8080 to host
