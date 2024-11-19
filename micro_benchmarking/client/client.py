@@ -20,11 +20,11 @@ if __name__ == '__main__':
         "ground_truth": "abacus"
     }
 
-    csv_filename = "results_flask.csv"
+    csv_filename = "results.csv"
 
-    fieldnames = ["model", "client_send_at", "server_receive_at",
-                  "image_preprocessed_at", "image_predicted_at",
-                  "image_save_at", "qoe_computed_at", "broker_produced_at", "client_receive_at"]
+    fieldnames = ["client_send_time", "network_time", "server_receive_time", "image_save_time",
+                  "image_preprocessed_time", "image_predicted_time",
+                  "qoe_computed_time", "broker_produced_time", "client_receive_time"]
 
     # Open CSV file for writing data (new file every time)
     with open(csv_filename, 'w', newline='') as csvfile:
@@ -41,22 +41,24 @@ if __name__ == '__main__':
                     'file': (filename, file, 'image/jpeg')
                 }
 
-                client_send_at = time.time()
+                client_send_time = time.perf_counter()
                 response = requests.post(f"{host}/predict", data=payload, files=files)
-                client_receive_at = time.time()
+                client_receive_time = time.perf_counter()
+
+                network_time = (client_receive_time - client_send_time) - (response.elapsed.total_seconds())
 
                 response = response.json()
                 # Prepare data for CSV row
                 data = {
-                    "model": response["model"],
-                    "client_send_at": client_send_at,
-                    "server_receive_at": float(response["server_receive_at"]),
-                    "image_save_at": float(response.get("image_save_at", float(response["server_receive_at"]))),
-                    "image_preprocessed_at": float(response["image_preprocessed_at"]),
-                    "image_predicted_at": float(response["image_predicted_at"]),
-                    "qoe_computed_at": float(response.get("qoe_computed_at", float(response["image_predicted_at"]))),
-                    "broker_produced_at": float(response.get("broker_produced_at", float(response["image_predicted_at"]))),
-                    "client_receive_at": client_receive_at
+                    "client_send_time": client_send_time,
+                    "network_time": network_time,
+                    "server_receive_time": float(response["server_receive_time"]),
+                    "image_save_time": float(response.get("image_save_time", float(response["server_receive_time"]))),
+                    "image_preprocessed_time": float(response["image_preprocessed_time"]),
+                    "image_predicted_time": float(response["image_predicted_time"]),
+                    "qoe_computed_time": float(response.get("qoe_computed_time", float(response["image_predicted_time"]))),
+                    "broker_produced_time": float(response.get("broker_produced_time", float(response["image_predicted_time"]))),
+                    "client_receive_time": client_receive_time
                 }
 
                 # Write individual request data to CSV

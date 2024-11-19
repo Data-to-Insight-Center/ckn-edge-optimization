@@ -13,24 +13,23 @@ def qoe_predict():
     Prediction endpoint.
     """
 
-    server_receive_at = time.time()
+    server_receive_time = time.perf_counter()
+
     file = request.files['file']
     filename = save_file(file)
-
-    image_save_at = time.time()
+    image_save_time = time.perf_counter()
 
     preprocessed_input = pre_process(filename)
-    image_preprocessed_at = time.time()
+    image_preprocessed_time = time.perf_counter()
 
     prediction, probability = predict(preprocessed_input)
-    image_predicted_at = time.time()
+    image_predicted_time = time.perf_counter()
 
     return jsonify({
-        "model": "vanilla_mobilenet_v3_small",
-        "server_receive_at": server_receive_at,
-        "image_save_at": image_save_at,
-        "image_preprocessed_at": image_preprocessed_at,
-        "image_predicted_at": image_predicted_at
+        "server_receive_time": server_receive_time,
+        "image_save_time": image_save_time,
+        "image_preprocessed_time": image_preprocessed_time,
+        "image_predicted_time": image_predicted_time
     })
 
 

@@ -14,7 +14,7 @@ SERVER_ID = os.getenv('SERVER_ID', 'd2iedgeai3')
 
 KAFKA_BROKER = os.getenv('CKN_KAFKA_BROKER', '149.165.170.250:9092')
 
-RAW_EVENT_TOPIC = os.getenv('RAW_EVENT_TOPIC', 'ckn_raw')
+RAW_EVENT_TOPIC = os.getenv('RAW_EVENT_TOPIC', 'ckn_events')
 START_DEPLOYMENT_TOPIC = os.getenv('START_DEPLOYMENT_TOPIC', 'ckn_start_deployment')
 END_DEPLOYMENT_TOPIC = os.getenv('END_DEPLOYMENT_TOPIC', 'ckn_end_deployment')
 
@@ -39,29 +39,9 @@ def qoe_predict():
     """
     Prediction endpoint.
     """
-    if request.method == 'POST':
-        # if the request contains a file or not
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        # if the file field is empty
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
+    file = request.files['file']
+    data = request.form
 
-        if file and check_file_extension(file.filename):
-            # getting the QoE constraints
-            data = request.form
-        return process_w_qoe(file, data)
-
-    return ''
-
-
-def process_w_qoe(file, data):
-    """
-    Process the request with QoE constraints.
-    """
     server_receive_at = time.time()
     filename = save_file(file)
     image_save_at = time.time()
