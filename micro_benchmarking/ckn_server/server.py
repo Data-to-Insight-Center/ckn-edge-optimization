@@ -39,9 +39,10 @@ def qoe_predict():
     """
     Prediction endpoint.
     """
+    server_receive_time = time.time()
+
     file = request.files['file']
     data = request.form
-
     filename = save_file(file)
     image_save_time = time.time()
 
