@@ -42,7 +42,6 @@ def qoe_predict():
     file = request.files['file']
     data = request.form
 
-    server_receive_time = time.time()
     filename = save_file(file)
     image_save_time = time.time()
 

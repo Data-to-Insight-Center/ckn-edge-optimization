@@ -1,27 +1,8 @@
 import csv
 import time
-from io import BytesIO
-import pycurl
-import requests
-import numpy as np
 
-def measure_curl_timings(url):
-    """
-    Measure DNS Resolution, TCP Connect, TTFB, and Total Time using pycurl.
-    """
-    buffer = BytesIO()
-    c = pycurl.Curl()
-    c.setopt(c.URL, url)
-    c.setopt(c.WRITEFUNCTION, buffer.write)
-    c.perform()
-    timings = {
-        "dns_resolution": c.getinfo(pycurl.NAMELOOKUP_TIME),
-        "tcp_connect": c.getinfo(pycurl.CONNECT_TIME),
-        "ttfb": c.getinfo(pycurl.STARTTRANSFER_TIME),
-        "total_time": c.getinfo(pycurl.TOTAL_TIME),
-    }
-    c.close()
-    return timings
+import numpy as np
+import requests
 
 if __name__ == '__main__':
     host = "http://149.165.174.52:8080"
@@ -43,8 +24,7 @@ if __name__ == '__main__':
     fieldnames = [
         "client_send_time", "network_time", "server_receive_time", "image_save_time",
         "image_preprocessed_time", "image_predicted_time", "qoe_computed_time",
-        "broker_produced_time", "client_receive_time", "dns_resolution",
-        "tcp_connect", "ttfb", "total_time"
+        "event_produced_time", "client_receive_time",
     ]
 
     # Open CSV file for writing data (new file every time)
@@ -67,9 +47,6 @@ if __name__ == '__main__':
                 response = requests.post(f"{host}/predict", data=payload, files=files)
                 client_receive_time = time.perf_counter()
 
-                # Measure protocol latencies
-                curl_timings = measure_curl_timings(host)
-
                 # Calculate network time using `requests`
                 network_time = (client_receive_time - client_send_time) - response.elapsed.total_seconds()
 
@@ -83,12 +60,8 @@ if __name__ == '__main__':
                     "image_preprocessed_time": float(response_json["image_preprocessed_time"]),
                     "image_predicted_time": float(response_json["image_predicted_time"]),
                     "qoe_computed_time": float(response_json.get("qoe_computed_time", float(response_json["image_predicted_time"]))),
-                    "broker_produced_time": float(response_json.get("broker_produced_time", float(response_json["image_predicted_time"]))),
-                    "client_receive_time": client_receive_time,
-                    "dns_resolution": curl_timings["dns_resolution"],
-                    "tcp_connect": curl_timings["tcp_connect"],
-                    "ttfb": curl_timings["ttfb"],
-                    "total_time": curl_timings["total_time"]
+                    "broker_produced_time": float(response_json.get("event_produced_time", float(response_json["image_predicted_time"]))),
+                    "client_receive_time": client_receive_time
                 }
 
                 # Write individual request data to CSV
