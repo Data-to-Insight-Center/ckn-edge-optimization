@@ -37,7 +37,7 @@ if __name__ == '__main__':
         "ground_truth": "abacus"
     }
 
-    csv_filename = "results.csv"
+    csv_filename = "results_ckn.csv"
 
     # Updated fieldnames to include protocol latencies
     fieldnames = [

@@ -3,10 +3,10 @@ import os
 import time
 
 from confluent_kafka import Producer
-from flask import Flask, flash, request, redirect, jsonify
+from flask import Flask, request, jsonify
 
 from model import predict, pre_process, model_store
-from server_utils import save_file, process_qoe, check_file_extension
+from server_utils import save_file, process_qoe
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './uploads'
@@ -42,33 +42,33 @@ def qoe_predict():
     file = request.files['file']
     data = request.form
 
-    server_receive_at = time.time()
+    server_receive_time = time.time()
     filename = save_file(file)
-    image_save_at = time.time()
+    image_save_time = time.time()
 
     preprocessed_input = pre_process(filename)
-    image_preprocessed_at = time.time()
+    image_preprocessed_time = time.time()
 
     prediction, probability = predict(preprocessed_input)
-    image_predicted_at = time.time()
+    image_predicted_time = time.time()
 
-    qoe, acc_qoe, delay_qoe = process_qoe(probability, image_predicted_at - image_save_at, float(data['delay']), float(data['accuracy']))
+    qoe, acc_qoe, delay_qoe = process_qoe(probability, image_predicted_time - image_save_time, float(data['delay']), float(data['accuracy']))
     current_model_id = model_store.get_current_model_id()
-    qoe_computed_at = time.time()
+    qoe_computed_time = time.time()
 
     kafka_payload = json.dumps({'server_id': SERVER_ID, 'model_id': current_model_id, 'qoe': qoe, 'accuracy_qoe': acc_qoe, 'delay_qoe': delay_qoe})
     producer.produce(RAW_EVENT_TOPIC, kafka_payload, callback=delivery_report)
     producer.flush(timeout=1)
-    broker_produced_at = time.time()
+    event_produced_time = time.time()
 
     return jsonify({
-        "model": "mobilenet_v3_small",
-        "server_receive_at": server_receive_at,
-        "image_save_at": image_save_at,
-        "image_preprocessed_at": image_preprocessed_at,
-        "image_predicted_at": image_predicted_at,
-        "qoe_computed_at": qoe_computed_at,
-        "broker_produced_at": broker_produced_at,
+        "server_receive_time": server_receive_time,
+        "image_save_time": image_save_time,
+        "image_preprocessed_time": image_preprocessed_time,
+        "image_predicted_time": image_predicted_time,
+        "image_predicted_time": image_predicted_time,
+        "qoe_computed_time": qoe_computed_time,
+        "event_produced_time": event_produced_time,
     })
 
 

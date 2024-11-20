@@ -9,10 +9,6 @@ app.config['UPLOAD_FOLDER'] = './uploads'
 
 @app.route('/predict', methods=['POST'])
 def qoe_predict():
-    """
-    Prediction endpoint.
-    """
-
     server_receive_time = time.perf_counter()
 
     file = request.files['file']
