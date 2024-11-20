@@ -24,7 +24,7 @@ if __name__ == '__main__':
     fieldnames = [
         "client_send_time", "network_time", "server_receive_time", "image_save_time",
         "image_preprocessed_time", "image_predicted_time", "qoe_computed_time",
-        "event_produced_time", "client_receive_time",
+        "event_produced_time", "response_create_time", "client_receive_time"
     ]
 
     # Open CSV file for writing data (new file every time)
@@ -61,6 +61,7 @@ if __name__ == '__main__':
                     "image_predicted_time": float(response_json["image_predicted_time"]),
                     "qoe_computed_time": float(response_json.get("qoe_computed_time", float(response_json["image_predicted_time"]))),
                     "event_produced_time": float(response_json.get("event_produced_time", float(response_json["image_predicted_time"]))),
+                    "response_create_time": float(response.headers["response_create_time"]),
                     "client_receive_time": client_receive_time
                 }
 

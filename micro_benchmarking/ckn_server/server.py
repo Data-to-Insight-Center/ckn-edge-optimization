@@ -61,7 +61,7 @@ def qoe_predict():
     producer.flush(timeout=1)
     event_produced_time = time.perf_counter()
 
-    return jsonify({
+    response = jsonify({
         "server_receive_time": server_receive_time,
         "image_save_time": image_save_time,
         "image_preprocessed_time": image_preprocessed_time,
@@ -70,6 +70,10 @@ def qoe_predict():
         "qoe_computed_time": qoe_computed_time,
         "event_produced_time": event_produced_time,
     })
+    response_create_time = time.perf_counter()
+    response.headers['response_create_time'] = response_create_time
+
+    return response
 
 
 if __name__ == "__main__":
