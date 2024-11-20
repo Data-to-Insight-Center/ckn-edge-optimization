@@ -60,7 +60,7 @@ if __name__ == '__main__':
                     "image_preprocessed_time": float(response_json["image_preprocessed_time"]),
                     "image_predicted_time": float(response_json["image_predicted_time"]),
                     "qoe_computed_time": float(response_json.get("qoe_computed_time", float(response_json["image_predicted_time"]))),
-                    "broker_produced_time": float(response_json.get("event_produced_time", float(response_json["image_predicted_time"]))),
+                    "event_produced_time": float(response_json.get("event_produced_time", float(response_json["image_predicted_time"]))),
                     "client_receive_time": client_receive_time
                 }
 

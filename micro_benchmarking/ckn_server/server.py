@@ -39,27 +39,27 @@ def qoe_predict():
     """
     Prediction endpoint.
     """
-    server_receive_time = time.time()
+    server_receive_time = time.perf_counter()
 
     file = request.files['file']
     data = request.form
     filename = save_file(file)
-    image_save_time = time.time()
+    image_save_time = time.perf_counter()
 
     preprocessed_input = pre_process(filename)
-    image_preprocessed_time = time.time()
+    image_preprocessed_time = time.perf_counter()
 
     prediction, probability = predict(preprocessed_input)
-    image_predicted_time = time.time()
+    image_predicted_time = time.perf_counter()
 
     qoe, acc_qoe, delay_qoe = process_qoe(probability, image_predicted_time - image_save_time, float(data['delay']), float(data['accuracy']))
     current_model_id = model_store.get_current_model_id()
-    qoe_computed_time = time.time()
+    qoe_computed_time = time.perf_counter()
 
     kafka_payload = json.dumps({'server_id': SERVER_ID, 'model_id': current_model_id, 'qoe': qoe, 'accuracy_qoe': acc_qoe, 'delay_qoe': delay_qoe})
     producer.produce(RAW_EVENT_TOPIC, kafka_payload, callback=delivery_report)
     producer.flush(timeout=1)
-    event_produced_time = time.time()
+    event_produced_time = time.perf_counter()
 
     return jsonify({
         "server_receive_time": server_receive_time,
