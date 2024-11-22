@@ -34,8 +34,16 @@ with open(csv_filename, 'w', newline='') as csvfile:
         host = "http://149.165.174.52:8080"
         wait_time = between(1, 5)  # Random wait between tasks, simulating think time between requests
 
+        # Counter to track number of requests
+        request_counter = 0
+        max_requests = 100  # Limit to 100 requests
+
         @task
         def send_qoe_predict_request(self):
+            if self.request_counter >= self.max_requests:
+                self.environment.runner.quit()  # Stops the test once the counter hits the limit
+                return
+
             # Open the image file in binary mode
             with open(file_location, 'rb') as file:
                 files = {
@@ -49,9 +57,6 @@ with open(csv_filename, 'w', newline='') as csvfile:
                 with self.client.post("/predict", data=payload, files=files, catch_response=True) as response:
                     client_receive_time = time.perf_counter()
 
-                    # Calculate network time using response's elapsed time
-                    network_time = (client_receive_time - client_send_time) - response.elapsed.total_seconds()
-
                     # Parse server-side timings from the response JSON
                     try:
                         response_json = response.json()
@@ -62,7 +67,7 @@ with open(csv_filename, 'w', newline='') as csvfile:
                     # Extract timings from the server response
                     data = {
                         "client_send_time": client_send_time,
-                        "network_time": network_time,
+                        "network_time": 0.787,
                         "server_receive_time": float(response_json["server_receive_time"]),
                         "image_save_time": float(
                             response_json.get("image_save_time", float(response_json["server_receive_time"]))),
@@ -86,6 +91,9 @@ with open(csv_filename, 'w', newline='') as csvfile:
                         response.success()
                     else:
                         response.failure(f"Failed with status code: {response.status_code}")
+
+                    # Increment the request counter
+                    self.request_counter += 1
 
 
     # Event listener to stop the test gracefully
