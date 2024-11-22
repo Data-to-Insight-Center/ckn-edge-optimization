@@ -18,7 +18,7 @@ if __name__ == '__main__':
         "ground_truth": "abacus"
     }
 
-    csv_filename = "results_fast.csv"
+    csv_filename = "results.csv"
 
     # Updated fieldnames to include protocol latencies
     fieldnames = [
@@ -35,7 +35,7 @@ if __name__ == '__main__':
         writer.writeheader()
 
         # Loop through 100 requests
-        for i in range(1000):
+        for i in range(100):
             # Open the image file in binary mode
             with open(file_location, 'rb') as file:
                 files = {
