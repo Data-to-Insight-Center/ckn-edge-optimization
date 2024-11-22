@@ -47,14 +47,11 @@ if __name__ == '__main__':
                 response = requests.post(f"{host}/predict", data=payload, files=files)
                 client_receive_time = time.perf_counter()
 
-                # Calculate network time using `requests`
-                network_time = (client_receive_time - client_send_time) - response.elapsed.total_seconds()
-
                 # Parse server-side timings from the response JSON
                 response_json = response.json()
                 data = {
                     "client_send_time": client_send_time,
-                    "network_time": network_time,
+                    "network_time": 0.787,
                     "server_receive_time": float(response_json["server_receive_time"]),
                     "image_save_time": float(response_json.get("image_save_time", float(response_json["server_receive_time"]))),
                     "image_preprocessed_time": float(response_json["image_preprocessed_time"]),

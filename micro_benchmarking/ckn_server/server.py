@@ -66,7 +66,6 @@ def qoe_predict():
         "image_save_time": image_save_time,
         "image_preprocessed_time": image_preprocessed_time,
         "image_predicted_time": image_predicted_time,
-        "image_predicted_time": image_predicted_time,
         "qoe_computed_time": qoe_computed_time,
         "event_produced_time": event_produced_time,
     })
