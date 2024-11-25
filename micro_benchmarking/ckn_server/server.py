@@ -69,8 +69,7 @@ def qoe_predict():
         "qoe_computed_time": qoe_computed_time,
         "event_produced_time": event_produced_time,
     })
-    response_create_time = time.perf_counter()
-    response.headers['response_create_time'] = response_create_time
+    response.headers['response_create_time'] = time.perf_counter()
 
     return response
 
