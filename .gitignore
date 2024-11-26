@@ -15,7 +15,3 @@ env/
 # System files and cache
 .DS_Store
 **/__pycache__/
-
-# Configuration directories
-ckn_kg/neo4j/
-neo4j/
