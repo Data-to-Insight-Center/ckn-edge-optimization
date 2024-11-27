@@ -10,14 +10,14 @@ app = FastAPI()
 producer = Producer({'bootstrap.servers': '149.165.170.250:9092'})
 
 @app.post("/predict")
-def predict_endpoint(
+async def predict_endpoint(
     file: UploadFile = File(...),
     delay: float = Form(...),
     accuracy: float = Form(...)
 ):
     server_receive_time = time.perf_counter()
 
-    filename = save_file(file)
+    filename = await save_file(file)
     image_save_time = time.perf_counter()
 
     preprocessed_input = pre_process(filename)

@@ -1,6 +1,6 @@
 import os
+import time
 import torch
-import aiofiles
 from PIL import Image
 from werkzeug.utils import secure_filename
 from torchvision import transforms
@@ -41,17 +41,9 @@ def process_qoe(probability, compute_time, req_delay, req_accuracy):
     delay_qoe = min(1.0, req_delay / compute_time)
     return 0.5 * acc_qoe + 0.5 * delay_qoe, acc_qoe, delay_qoe
 
-UPLOAD_FOLDER = './uploads'
-async def save_file(file):
-    """Asynchronously save the uploaded file to disk without chunking."""
-    filename = secure_filename(file.filename)  # Secure the filename
-    file_path = os.path.join(UPLOAD_FOLDER, filename)
-
-    # Open the file asynchronously and write the entire file content
-    async with aiofiles.open(file_path, 'wb') as f:
-        content = await file.read()  # Read the entire content
-        await f.write(content)  # Write the content to the file
-
+def save_file(image_data):
+    file_path = os.path.join('./uploads', 'abacus.jpg')
+    image_data.save(file_path, format="JPEG")
     return file_path
 
 def delivery_report(err, msg):

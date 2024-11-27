@@ -30,24 +30,18 @@ if __name__ == '__main__':
     # Open CSV file for writing data (new file every time)
     with open(csv_filename, 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        # Write header at the start of the new file
         writer.writeheader()
 
-        # Loop through 100 requests
-        for i in range(100):
-            # Open the image file in binary mode
+        for i in range(1000):
             with open(file_location, 'rb') as file:
                 files = {
                     'file': (filename, file, 'image/jpeg')
                 }
 
-                # Measure client-side send and receive times
                 client_send_time = time.perf_counter()
                 response = requests.post(f"{host}/predict", data=payload, files=files)
                 client_receive_time = time.perf_counter()
 
-                # Parse server-side timings from the response JSON
                 response_json = response.json()
                 data = {
                     "client_send_time": client_send_time,
@@ -62,7 +56,6 @@ if __name__ == '__main__':
                     "client_receive_time": client_receive_time
                 }
 
-                # Write individual request data to CSV
                 writer.writerow(data)
 
             print(f"Request {i + 1} completed.")
