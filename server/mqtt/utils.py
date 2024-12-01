@@ -1,8 +1,5 @@
-import os
-import time
 import torch
 from PIL import Image
-from werkzeug.utils import secure_filename
 from torchvision import transforms
 
 class ModelStore:
@@ -40,11 +37,6 @@ def process_qoe(probability, compute_time, req_delay, req_accuracy):
     acc_qoe = min(1.0, req_accuracy / probability)
     delay_qoe = min(1.0, req_delay / compute_time)
     return 0.5 * acc_qoe + 0.5 * delay_qoe, acc_qoe, delay_qoe
-
-def save_file(image_data):
-    file_path = os.path.join('./uploads', 'abacus.jpg')
-    image_data.save(file_path, format="JPEG")
-    return file_path
 
 def delivery_report(err, msg):
     if err is not None:

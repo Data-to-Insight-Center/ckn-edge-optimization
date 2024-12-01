@@ -26,7 +26,8 @@ def qoe_predict():
     current_model_id = model_store.get_current_model_id()
     qoe_computed_time = time.perf_counter()
 
-    kafka_payload = json.dumps({'model_id': current_model_id, 'qoe': qoe, 'accuracy_qoe': acc_qoe, 'delay_qoe': delay_qoe})
+    kafka_payload = json.dumps({'model_id': current_model_id, 'qoe': qoe, 'accuracy_qoe': acc_qoe,
+                                'delay_qoe': delay_qoe, 'prediction': prediction, 'probability': probability})
     producer.produce('ckn-event', kafka_payload, callback=delivery_report)
     producer.flush(timeout=1)
     event_produced_time = time.perf_counter()

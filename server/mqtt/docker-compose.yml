@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  mqtt-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mqtt-daemon
+    volumes:
+      - .:/app
+    command: python -u /app/subscriber.py
